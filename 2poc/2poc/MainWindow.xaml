@@ -1,0 +1,33 @@
+﻿<Window
+    x:Class="_2poc.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:_2poc"
+    mc:Ignorable="d" 
+    Height="600" Width="400">
+
+    <Grid>
+        <TabControl x:Name="FunctionTab">
+            <TabItem Header="Host">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Margin="58,10,58,510" Name="OpenConnection" Click="OpenConnection_Click" Grid.Column="1">Open Connections</Button>
+                    <TextBox IsEnabled="False" Margin="47,105,47,167" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Client">
+                <Grid>
+                    <Label Content="IP Address" Margin="47,10,272,504"></Label>
+                    <TextBox  IsEnabled="True" Margin="47,42,47,458"/>
+                    <Button Margin="81,107,81,404" Name="Connect" Click="Connect_Click">Connect</Button>
+                    <TextBox Height="300" IsEnabled="False" Margin="47,195,47,77"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
