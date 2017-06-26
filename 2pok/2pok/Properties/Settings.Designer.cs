@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace _2poc.Properties
+namespace _2pok.Properties
 {
 
 
