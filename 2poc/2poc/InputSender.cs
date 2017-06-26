@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace _2poc
 {
@@ -27,7 +26,12 @@ namespace _2poc
             await this.udpClient.SendAsync(datagram, datagram.Length);
         }
 
-        public void ReceiveInputAsync(InputHandler inputHandler)
+        public byte[] EndReceiveInput(IAsyncResult inputResult, IPEndPoint endpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void BeginReceiveInput(AsyncCallback inputHandlerCallback)
         {
             throw new NotImplementedException();
         }

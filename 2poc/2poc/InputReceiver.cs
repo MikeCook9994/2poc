@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace _2poc
 {
     public class InputReceiver : IInputClient
     {
-        UdpClient udpClient;
-        int portNumber;
+        private UdpState udpState;
 
         public InputReceiver(int portNumber)
         {
-            this.portNumber = portNumber;
-            this.udpClient = new UdpClient(this.portNumber);
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
+            UdpClient udpClient = new UdpClient(ipEndPoint);
+
+            this.udpState = new UdpState(udpClient, ipEndPoint);
         }
 
         public void Close()
         {
-            this.udpClient.Close();
+            this.udpState.client.Close();
         }
 
-        public void ReceiveInputAsync(InputHandler inputHandler)
+        public void BeginReceiveInput(AsyncCallback inputHandlerCallback)
         {
-            Task<UdpReceiveResult> inputTask = udpClient.ReceiveAsync();
-            inputHandler(inputTask);
+            this.udpState.client.BeginReceive(inputHandlerCallback, udpState);
+        }
+
+        public byte[] EndReceiveInput(IAsyncResult inputResult, IPEndPoint endpoint)
+        {
+            return this.udpState.client.EndReceive(inputResult, ref endpoint);
         }
 
         public void SendInputAsync(string input)

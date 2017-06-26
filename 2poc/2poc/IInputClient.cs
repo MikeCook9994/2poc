@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
 
 namespace _2poc
 {
@@ -6,7 +7,9 @@ namespace _2poc
     {
         void SendInputAsync(string input);
 
-        void ReceiveInputAsync(InputHandler inputHandler);
+        void BeginReceiveInput(AsyncCallback inputHandlerCallback);
+
+        byte[] EndReceiveInput(IAsyncResult inputResult, IPEndPoint endpoint);
 
         void Close();
     }

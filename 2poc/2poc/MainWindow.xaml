@@ -28,7 +28,7 @@
                     <Label Content="IP Address:Port Number" Margin="47,10,47,473"></Label>
                     <TextBox  Name="Client_Port_And_Ip_Textbox" IsEnabled="True" Margin="47,53,47,447"/>
                     <Button Margin="47,99,47,412" Name="Connect" Click="Connect_Click">Connect</Button>
-                    <TextBox Name="Client_Input_Textbox" Height="300" IsEnabled="False" Margin="47,134,47,107"/>
+                    <TextBox Name="Client_Input_Textbox" Height="300" IsEnabled="True" Margin="47,134,47,107"/>
                 </Grid>
             </TabItem>
         </TabControl>

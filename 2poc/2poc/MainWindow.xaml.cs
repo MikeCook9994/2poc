@@ -7,15 +7,13 @@ using System;
 
 namespace _2poc
 {
-    public delegate void InputHandler(Task<UdpReceiveResult> inputTask);
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        IInputClient inputClient;
-        InputHandler inputHandler;
+        private IInputClient inputClient;
+        private AsyncCallback inputHandlerCallback;
 
         public MainWindow()
         {
@@ -24,7 +22,10 @@ namespace _2poc
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.inputClient.Close();
+            if(this.inputClient != null)
+            {
+                this.inputClient.Close();
+            }
         }
 
         private void OpenConnection_Click(object sender, RoutedEventArgs e)
@@ -32,9 +33,9 @@ namespace _2poc
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
 
             this.inputClient = new InputReceiver(portNumber);
-            this.inputHandler = new InputHandler(handleInput);
+            this.inputHandlerCallback = new AsyncCallback(handleInput);
 
-            inputClient.ReceiveInputAsync(inputHandler);
+            inputClient.BeginReceiveInput(this.inputHandlerCallback);
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
@@ -45,15 +46,20 @@ namespace _2poc
             int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
             this.inputClient = new InputSender(ipAddress, portNumber);
-            this.inputClient.SendInputAsync("Hello World");
+            this.inputClient.SendInputAsync(Client_Input_Textbox.Text);
         }
 
-        public void handleInput(Task<UdpReceiveResult> inputTask)
+        public void handleInput(IAsyncResult inputResult)
         {
-            inputTask.Wait();
-            this.inputClient.ReceiveInputAsync(this.inputHandler);
-            byte[] input = inputTask.Result.Buffer;
-            Host_Input_Textbox.Text += '\n' + Encoding.ASCII.GetString(input);
+            IPEndPoint endpoint = ((UdpState)(inputResult.AsyncState)).endpoint;
+            byte[] input = inputClient.EndReceiveInput(inputResult, endpoint);
+
+            inputClient.BeginReceiveInput(this.inputHandlerCallback);
+
+            this.Dispatcher.Invoke(() =>
+            {
+                Host_Input_Textbox.Text += '\n' + Encoding.ASCII.GetString(input);
+            });
         }
     }
 }
