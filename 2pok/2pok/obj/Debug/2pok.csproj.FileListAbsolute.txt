@@ -1,0 +1,17 @@
+D:\cook\Documents\projects\2poc\2poc\2poc\bin\Debug\2poc.exe.config
+D:\cook\Documents\projects\2poc\2poc\2poc\bin\Debug\2poc.exe
+D:\cook\Documents\projects\2poc\2poc\2poc\bin\Debug\2poc.pdb
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2pok.csprojResolveAssemblyReference.cache
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\MainWindow.g.cs
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\App.g.cs
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2poc_MarkupCompile.cache
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2poc_MarkupCompile.lref
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\MainWindow.baml
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2poc.g.resources
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\_2poc.Properties.Resources.resources
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2pok.csproj.GenerateResource.Cache
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2poc.exe
+D:\cook\Documents\projects\2poc\2poc\2poc\obj\Debug\2poc.pdb
+D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\2poc.exe.config
+D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2poc.exe
+D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2poc.pdb
