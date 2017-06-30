@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Windows.Forms;
+using _2pok.interfaces;
 
 namespace _2pok
 {
-    public class InputReceiver : IInputClient
+    public class InputReceiver : IInputReceiver
     {
         private UdpState udpState;
 
@@ -21,17 +24,17 @@ namespace _2pok
             this.udpState.client.Close();
         }
 
-        public void BeginReceiveInput(AsyncCallback inputHandlerCallback)
+        public void BeginReceivingInput(AsyncCallback inputHandlerCallback)
         {
             this.udpState.client.BeginReceive(inputHandlerCallback, udpState);
         }
 
-        public byte[] EndReceiveInput(IAsyncResult inputResult, IPEndPoint endpoint)
+        public KeyboardInput EndReceivingKeyboardInput(IAsyncResult inputResult, IPEndPoint endpoint)
         {
-            return this.udpState.client.EndReceive(inputResult, ref endpoint);
+            return (KeyboardInput)Utils.ByteArrayToObject(this.udpState.client.EndReceive(inputResult, ref endpoint));
         }
 
-        public void SendInputAsync(string input)
+        public byte[] EndReceivingMouseInput(IAsyncResult inputResult, IPEndPoint endpoint)
         {
             throw new NotImplementedException();
         }

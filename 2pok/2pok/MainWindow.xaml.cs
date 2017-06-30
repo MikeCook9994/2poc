@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using System.Net.Sockets;
-using System.Text;
+﻿using System.Windows;
 using System.Net;
 using System;
+using _2pok.interfaces;
 
 namespace _2pok
 {
@@ -12,8 +10,7 @@ namespace _2pok
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IInputClient inputClient;
-        private AsyncCallback inputHandlerCallback;
+        IKeyboard keyboard;
 
         public MainWindow()
         {
@@ -22,44 +19,40 @@ namespace _2pok
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(this.inputClient != null)
-            {
-                this.inputClient.Close();
-            }
+            this.keyboard.Disconnect();
         }
 
         private void OpenConnection_Click(object sender, RoutedEventArgs e)
         {
+            OpenConnection.IsEnabled = false;
+
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
+            IInputReceiver inputNetworkClient = new InputReceiver(portNumber);
 
-            this.inputClient = new InputReceiver(portNumber);
-            this.inputHandlerCallback = new AsyncCallback(handleInput);
+            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, this);
+            this.keyboard = virtualKeyboard;
 
-            inputClient.BeginReceiveInput(this.inputHandlerCallback);
+            virtualKeyboard.Connect();
+
+
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
+            Connect.IsEnabled = false;
+
+            IInputSender inputNetworkClient = new InputSender();
+            KeyboardMonitor keyboardMonitor = new KeyboardMonitor(true);
+
+            INetworkKeyboard networkKeyboard = new NetworkKeyboard(inputNetworkClient, keyboardMonitor);
+            this.keyboard = networkKeyboard;
+
             string hostIpAndPortNumber = Client_Port_And_Ip_Textbox.Text;
             string[] splitConnectionDetails = hostIpAndPortNumber.Split(':');
             IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
             int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
-            this.inputClient = new InputSender(ipAddress, portNumber);
-            this.inputClient.SendInputAsync(Client_Input_Textbox.Text);
+            networkKeyboard.Connect(ipAddress, portNumber);
         }
-
-        public void handleInput(IAsyncResult inputResult)
-        {
-            IPEndPoint endpoint = ((UdpState)(inputResult.AsyncState)).endpoint;
-            byte[] input = inputClient.EndReceiveInput(inputResult, endpoint);
-
-            inputClient.BeginReceiveInput(this.inputHandlerCallback);
- 
-            this.Dispatcher.Invoke(() =>
-            {
-                Host_Input_Textbox.Text += '\n' + Encoding.ASCII.GetString(input);
-            });
-        }
-    }
+    }   
 }

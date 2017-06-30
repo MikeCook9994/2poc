@@ -2,16 +2,23 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using _2pok.interfaces;
 
 namespace _2pok
 {
-    public class InputSender : IInputClient
+    public class InputSender : IInputSender
     {
         UdpClient udpClient;
 
-        public InputSender(IPAddress hostIp, int portNumber)
+        public InputSender()
         {
             this.udpClient = new UdpClient();
+        }
+
+        public void Connect(IPAddress hostIp, int portNumber)
+        {
             this.udpClient.Connect(hostIp, portNumber);
         }
 
@@ -20,18 +27,13 @@ namespace _2pok
             this.udpClient.Close();
         }
 
-        public async void SendInputAsync(string input)
+        public async Task<int> SendKeyboardInputAsync(KeyboardInput keyboardInput)
         {
-            byte[] datagram = Encoding.ASCII.GetBytes(input);
-            await this.udpClient.SendAsync(datagram, datagram.Length);
+            byte[] datagram = Utils.ObjectToByteArray(keyboardInput);
+            return await this.udpClient.SendAsync(datagram, datagram.Length);
         }
 
-        public byte[] EndReceiveInput(IAsyncResult inputResult, IPEndPoint endpoint)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void BeginReceiveInput(AsyncCallback inputHandlerCallback)
+        public async Task<int> SendMouseInputAsync()
         {
             throw new NotImplementedException();
         }

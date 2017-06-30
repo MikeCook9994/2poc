@@ -19,16 +19,16 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Port Number" Margin="47,10,47,473" Grid.ColumnSpan="2"></Label>
                     <TextBox  Name="Host_Port_Number_Textbox" IsEnabled="True" Margin="47,53,47,447" Grid.ColumnSpan="2"/>
-                    <Button Margin="47,99,47,412" Name="OpenConnection" Click="OpenConnection_Click" Grid.Column="1">Open Connections</Button>
-                    <TextBox Name="Host_Input_Textbox" IsEnabled="False" Margin="47,134,47,107" Grid.Column="1"/>
+                    <Button Margin="47,99,47,412" x:Name="OpenConnection" Click="OpenConnection_Click" Grid.Column="1">Open Connections</Button>
+                    <TextBox x:Name="Host_Input_Textbox" IsEnabled="False" Margin="47,134,47,107" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Client">
                 <Grid>
                     <Label Content="IP Address:Port Number" Margin="47,10,47,473"></Label>
                     <TextBox  Name="Client_Port_And_Ip_Textbox" IsEnabled="True" Margin="47,53,47,447"/>
-                    <Button Margin="47,99,47,412" Name="Connect" Click="Connect_Click">Connect</Button>
-                    <TextBox Name="Client_Input_Textbox" Height="300" IsEnabled="True" Margin="47,134,47,107"/>
+                    <Button Margin="47,99,47,412" x:Name="Connect" Click="Connect_Click">Connect</Button>
+                    <TextBox x:Name="Client_Input_Textbox" IsEnabled="False" Margin="47,134,47,107"/>
                 </Grid>
             </TabItem>
         </TabControl>
