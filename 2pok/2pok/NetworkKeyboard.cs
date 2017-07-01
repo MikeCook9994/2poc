@@ -24,14 +24,20 @@ namespace _2pok
 
         public async void PressKey(VirtualKeyCode key)
         {
-            KeyboardInput keyboardInput = new KeyboardInput(key, true);
-            int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+            if(!this.pressedKeys.Contains(key))
+            {
+                KeyboardInput keyboardInput = new KeyboardInput(key, true);
+                int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+            }
         }
 
         public async void ReleaseKey(VirtualKeyCode key)
         {
-            KeyboardInput keyboardInput = new KeyboardInput(key, false);
-            int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+            if(this.pressedKeys.Contains(key))
+            {
+                KeyboardInput keyboardInput = new KeyboardInput(key, false);
+                int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+            }
         }
 
         public void Connect(IPAddress hostIp, int portNumber)

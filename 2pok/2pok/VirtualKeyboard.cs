@@ -30,14 +30,20 @@ namespace _2pok
 
         public void PressKey(VirtualKeyCode key)
         {
-            this.pressedKeys.Add(key);
-            this.inputSimulator.Keyboard.KeyDown(key);
+            if(!this.pressedKeys.Contains(key))
+            {
+                this.pressedKeys.Add(key);
+                this.inputSimulator.Keyboard.KeyDown(key);
+            }
         }
 
         public void ReleaseKey(VirtualKeyCode key)
         {
-            this.pressedKeys.Remove(key);
-            this.inputSimulator.Keyboard.KeyUp(key);
+            if(this.pressedKeys.Contains(key))
+            {
+                this.pressedKeys.Remove(key);
+                this.inputSimulator.Keyboard.KeyUp(key);
+            }
         }
 
         private void handleInput(IAsyncResult inputResult)
