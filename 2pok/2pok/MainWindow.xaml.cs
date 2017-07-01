@@ -2,6 +2,7 @@
 using System.Net;
 using System;
 using _2pok.interfaces;
+using WindowsInput;
 
 namespace _2pok
 {
@@ -28,8 +29,9 @@ namespace _2pok
 
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
             IInputReceiver inputNetworkClient = new InputReceiver(portNumber);
+            IInputSimulator inputSimulator = new InputSimulator();
 
-            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, this);
+            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, inputSimulator,  this);
             this.keyboard = virtualKeyboard;
 
             virtualKeyboard.Connect();

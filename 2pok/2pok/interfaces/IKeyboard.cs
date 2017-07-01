@@ -1,12 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using WindowsInput.Native;
 
 namespace _2pok.interfaces
 {
     interface IKeyboard
     {
-        void PressKey(Keys key);
+        void PressKey(VirtualKeyCode key);
 
-        void ReleaseKey(Keys key);
+        void ReleaseKey(VirtualKeyCode key);
 
         void Disconnect();
     }

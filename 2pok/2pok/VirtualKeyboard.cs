@@ -1,34 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Net;
 using _2pok.interfaces;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace _2pok
 {
     class VirtualKeyboard : IVirtualKeyboard
     {
-        HashSet<Keys> pressedKeys;
+        HashSet<VirtualKeyCode> pressedKeys;
         IInputReceiver inputReceiver;
+        IInputSimulator inputSimulator;
         AsyncCallback inputHandlerCallback;
         MainWindow mainWindow;
 
-        public VirtualKeyboard(IInputReceiver inputReceiver, MainWindow mainWindow)
+        public VirtualKeyboard(IInputReceiver inputReceiver, IInputSimulator inputSimulator, MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
-            this.pressedKeys = new HashSet<Keys>();
+
+            this.pressedKeys = new HashSet<VirtualKeyCode>();
+
             this.inputHandlerCallback = new AsyncCallback(handleInput);
+
             this.inputReceiver = inputReceiver;
+
+            this.inputSimulator = inputSimulator;
         }
 
-        public async void PressKey(Keys key)
+        public void PressKey(VirtualKeyCode key)
         {
             this.pressedKeys.Add(key);
+            this.inputSimulator.Keyboard.KeyDown(key);
         }
 
-        public async void ReleaseKey(Keys key)
+        public void ReleaseKey(VirtualKeyCode key)
         {
             this.pressedKeys.Remove(key);
+            this.inputSimulator.Keyboard.KeyUp(key);
         }
 
         private void handleInput(IAsyncResult inputResult)

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using WindowsInput.Native;
 
 namespace _2pok
 {
@@ -12,7 +8,7 @@ namespace _2pok
     {
         bool Global = false;
 
-        public delegate void LocalKeyEventHandler(Keys key);
+        public delegate void LocalKeyEventHandler(VirtualKeyCode key);
         public event LocalKeyEventHandler KeyDown;
         public event LocalKeyEventHandler KeyUp;
 
@@ -104,7 +100,6 @@ namespace _2pok
         //The listener that will trigger events
         private int KeybHookProc(int Code, int W, int L)
         {
-            KBDLLHookStruct LS = new KBDLLHookStruct();
             if (Code < 0)
             {
                 return CallNextHookEx(HookID, Code, W, L);
@@ -120,11 +115,11 @@ namespace _2pok
                         int keydownup = L >> 30;
                         if (keydownup == 0)
                         {
-                            if (KeyDown != null) KeyDown((Keys)W);
+                            if (KeyDown != null) KeyDown((VirtualKeyCode)W);
                         }
                         if (keydownup == -1)
                         {
-                            if (KeyUp != null) KeyUp((Keys)W);
+                            if (KeyUp != null) KeyUp((VirtualKeyCode)W);
                         }
                         //System.Diagnostics.Debug.WriteLine("Down: " + (Keys)W);
                     }
@@ -140,11 +135,11 @@ namespace _2pok
                     }
                     if (kEvent == KeyEvents.KeyDown || kEvent == KeyEvents.SKeyDown)
                     {
-                        if (KeyDown != null) KeyDown((Keys)vkCode);
+                        if (KeyDown != null) KeyDown((VirtualKeyCode)vkCode);
                     }
                     if (kEvent == KeyEvents.KeyUp || kEvent == KeyEvents.SKeyUp)
                     {
-                        if (KeyUp != null) KeyUp((Keys)vkCode);
+                        if (KeyUp != null) KeyUp((VirtualKeyCode)vkCode);
                     }
                 }
             }

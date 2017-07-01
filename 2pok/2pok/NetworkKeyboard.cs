@@ -2,18 +2,19 @@
 using System.Windows.Forms;
 using System.Net;
 using _2pok.interfaces;
+using WindowsInput.Native;
 
 namespace _2pok
 {
     class NetworkKeyboard : INetworkKeyboard
     {
-        HashSet<Keys> pressedKeys;
+        HashSet<VirtualKeyCode> pressedKeys;
         IInputSender inputSender;
         KeyboardMonitor keyboardMonitor;
 
         public NetworkKeyboard(IInputSender inputSender, KeyboardMonitor keyboardMonitor)
         {
-            pressedKeys = new HashSet<Keys>();
+            pressedKeys = new HashSet<VirtualKeyCode>();
             this.inputSender = inputSender;
 
             this.keyboardMonitor = keyboardMonitor;
@@ -21,13 +22,13 @@ namespace _2pok
             this.keyboardMonitor.KeyUp += ReleaseKey;
         }
 
-        public async void PressKey(Keys key)
+        public async void PressKey(VirtualKeyCode key)
         {
             KeyboardInput keyboardInput = new KeyboardInput(key, true);
             int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
         }
 
-        public async void ReleaseKey(Keys key)
+        public async void ReleaseKey(VirtualKeyCode key)
         {
             KeyboardInput keyboardInput = new KeyboardInput(key, false);
             int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);

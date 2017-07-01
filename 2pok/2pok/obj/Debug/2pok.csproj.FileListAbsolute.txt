@@ -26,3 +26,5 @@ D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2pok.g.resources
 D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\_2pok.Properties.Resources.resources
 D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2pok.exe
 D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2pok.pdb
+D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WindowsInput.dll
+D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WindowsInput.xml

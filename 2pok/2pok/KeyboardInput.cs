@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Windows.Forms;
+using WindowsInput.Native;
 
 namespace _2pok
 {
     [Serializable]
     public class KeyboardInput
     {
-        public Keys key { get; set; }
+        public VirtualKeyCode key { get; set; }
         public bool isBeingPressed { get; set; }
 
-        public KeyboardInput(Keys key, bool pressedState)
+        public KeyboardInput(VirtualKeyCode key, bool pressedState)
         {
             this.key = key;
             this.isBeingPressed = pressedState;
