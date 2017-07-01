@@ -30,20 +30,16 @@ namespace _2pok
 
         public void PressKey(VirtualKeyCode key)
         {
-            if(!this.pressedKeys.Contains(key))
-            {
-                this.pressedKeys.Add(key);
-                this.inputSimulator.Keyboard.KeyDown(key);
-            }
+            Console.WriteLine(key.ToString() + " press received");
+            this.pressedKeys.Add(key);
+            this.inputSimulator.Keyboard.KeyDown(key);
         }
 
         public void ReleaseKey(VirtualKeyCode key)
         {
-            if(this.pressedKeys.Contains(key))
-            {
-                this.pressedKeys.Remove(key);
-                this.inputSimulator.Keyboard.KeyUp(key);
-            }
+            Console.WriteLine(key.ToString() + " release received");
+            this.pressedKeys.Remove(key);
+            this.inputSimulator.Keyboard.KeyUp(key);
         }
 
         private void handleInput(IAsyncResult inputResult)
@@ -52,6 +48,8 @@ namespace _2pok
             KeyboardInput keyboardInput = this.inputReceiver.EndReceivingKeyboardInput(inputResult, endpoint);
 
             this.inputReceiver.BeginReceivingInput(this.inputHandlerCallback);
+
+            Console.WriteLine(keyboardInput.key.ToString() + " input received. isbeingPressed: " + keyboardInput.isBeingPressed);
 
             if (keyboardInput.isBeingPressed && !this.pressedKeys.Contains(keyboardInput.key))
             {

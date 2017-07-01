@@ -26,6 +26,7 @@ namespace _2pok
         {
             if(!this.pressedKeys.Contains(key))
             {
+                this.pressedKeys.Add(key);
                 KeyboardInput keyboardInput = new KeyboardInput(key, true);
                 int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
             }
@@ -35,6 +36,7 @@ namespace _2pok
         {
             if(this.pressedKeys.Contains(key))
             {
+                this.pressedKeys.Remove(key);
                 KeyboardInput keyboardInput = new KeyboardInput(key, false);
                 int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
             }
