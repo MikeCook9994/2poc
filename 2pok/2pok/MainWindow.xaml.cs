@@ -31,12 +31,10 @@ namespace _2pok
             IInputReceiver inputNetworkClient = new InputReceiver(portNumber);
             IInputSimulator inputSimulator = new InputSimulator();
 
-            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, inputSimulator,  this);
+            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, inputSimulator, this);
             this.keyboard = virtualKeyboard;
 
             virtualKeyboard.Connect();
-
-
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)

@@ -67,6 +67,7 @@
     <Compile Include="interfaces\IVirtualKeyboard.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyboardMonitor.cs" />
+    <Compile Include="MouseMonitor.cs" />
     <Compile Include="NetworkKeyboard.cs" />
     <Compile Include="UdpState.cs" />
     <Compile Include="Utils.cs" />
