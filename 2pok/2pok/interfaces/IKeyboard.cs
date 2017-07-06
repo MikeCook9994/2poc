@@ -7,7 +7,5 @@ namespace _2pok.interfaces
         void PressKey(VirtualKeyCode key);
 
         void ReleaseKey(VirtualKeyCode key);
-
-        void Disconnect();
     }
 }

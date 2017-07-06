@@ -29,3 +29,5 @@ D:\cook\Documents\projects\2pok\2pok\2pok\obj\Debug\2pok.pdb
 D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WindowsInput.dll
 D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WindowsInput.xml
 D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WindowsInput.pdb
+D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WatiN.Core.dll
+D:\cook\Documents\projects\2pok\2pok\2pok\bin\Debug\WatiN.Core.xml

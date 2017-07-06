@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Net;
 using _2pok.interfaces;
 using WindowsInput.Native;
 
 namespace _2pok
 {
-    class NetworkKeyboard : INetworkKeyboard
+    class NetworkKeyboard : IKeyboard
     {
         HashSet<VirtualKeyCode> pressedKeys;
         IInputSender inputSender;
@@ -40,17 +38,6 @@ namespace _2pok
                 KeyboardInput keyboardInput = new KeyboardInput(key, false);
                 int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
             }
-        }
-
-        public void Connect(IPAddress hostIp, int portNumber)
-        {
-            this.inputSender.Connect(hostIp, portNumber);
-            Application.Run();
-        }
-
-        public void Disconnect()
-        {
-            this.inputSender.Close();
         }
     }
 }

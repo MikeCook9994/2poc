@@ -40,7 +40,8 @@ namespace _2pok
         public KeyboardMonitor(bool Global)
         {
             this.Global = Global;
-            TheHookCB = new Utils.CallbackDelegate(KeybHookProc);
+            this.TheHookCB = new Utils.CallbackDelegate(KeybHookProc);
+
             if (Global)
             {
                 HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, TheHookCB, 0, 0); 

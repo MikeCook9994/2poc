@@ -7,21 +7,19 @@ namespace _2pok
     class MouseMonitor
     {
         [StructLayout(LayoutKind.Sequential)]
-        private struct POINT
+        public struct POINT
         {
-            public int x;
-            public int y;
-        }
+            public long x;
+            public long y;
+        };
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct MSLLHOOKSTRUCT
-        {
+        public struct MOUSEHOOKSTRUCT {
             public POINT pt;
-            public uint mouseData;
-            public uint flags;
-            public uint time;
-            public IntPtr dwExtraInfo;
-        }
+            public uint hwnd;
+            public uint wHitTestCode;
+            public UIntPtr dwExtraInfo;
+        };
 
         private enum MouseMessages
         {
@@ -30,13 +28,29 @@ namespace _2pok
             WM_MOUSEMOVE = 0x0200,
             WM_MOUSEWHEEL = 0x020A,
             WM_RBUTTONDOWN = 0x0204,
-            WM_RBUTTONUP = 0x0205
+            WM_RBUTTONUP = 0x0205,
+            WM_MBUTTONDOWN = 0x0207,
+            WM_MBUTTONUP = 0x0208
         }
+
+        public delegate void LocalMouseEventHandler(MOUSEHOOKSTRUCT mouseInput);
+
+        public LocalMouseEventHandler leftMouseButtonUpCallback;
+        public LocalMouseEventHandler leftMouseButtonDownCallback;
+
+        public LocalMouseEventHandler rightMouseButtonUpCallback;
+        public LocalMouseEventHandler rightMouseButtonDownCallback;
+
+        public LocalMouseEventHandler middleMouseButtonUpCallback;
+        public LocalMouseEventHandler middleMouseButtonDownCallback;
+
+        public LocalMouseEventHandler scrollWheelUpCallback;
+        public LocalMouseEventHandler scrollWheelDownCallback;
+
+        public LocalMouseEventHandler mouseMovedCallback;
 
         private int hookID = 0;
         private Utils.CallbackDelegate hookCallback = null;
-
-        private const int WH_MOUSE_LL = 14;
 
         bool global = false;
         bool isFinalized = false;
@@ -51,11 +65,12 @@ namespace _2pok
             {
                 if (this.global)
                 {
-                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, this.hookCallback, Utils.GetModuleHandle(curModule.ModuleName), 0);
+                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE_LL, this.hookCallback, Utils.GetModuleHandle(curModule.ModuleName), 0);
+                    Console.WriteLine(this.hookID);
                 }
                 else
                 {
-                    hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD, this.hookCallback, 0, Utils.GetCurrentThreadId());
+                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE, this.hookCallback, 0, Utils.GetCurrentThreadId());
                 }
             }
         }
@@ -82,9 +97,52 @@ namespace _2pok
         {
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
-                MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MSLLHOOKSTRUCT));
-                Console.WriteLine(hookStruct.pt.x + ", " + hookStruct.pt.y);
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.leftMouseButtonDownCallback(hookStruct);
             }
+            else if (nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.leftMouseButtonUpCallback(hookStruct);
+            }
+            else if (nCode >= 0 && MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.rightMouseButtonDownCallback(hookStruct);
+            }
+            else if (nCode >= 0 && MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.rightMouseButtonUpCallback(hookStruct);
+            }
+            else if (nCode >= 0 && MouseMessages.WM_MBUTTONDOWN == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.middleMouseButtonDownCallback(hookStruct);
+            }
+            else if (nCode >= 0 && MouseMessages.WM_MBUTTONUP == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.middleMouseButtonUpCallback(hookStruct);
+            }
+            else if (nCode >= 0 && MouseMessages.WM_MOUSEWHEEL == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                if(wParam > 0)
+                {
+                    this.scrollWheelUpCallback(hookStruct);
+                }
+                else
+                {
+                    this.scrollWheelDownCallback(hookStruct);
+                }
+            }
+            else if (nCode >= 0 && MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
+            {
+                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                this.mouseMovedCallback(hookStruct);
+            }
+
             return Utils.CallNextHookEx(hookID, nCode, wParam, lParam);
         }
     }

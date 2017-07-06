@@ -12,6 +12,7 @@ namespace _2pok
     public partial class MainWindow : Window
     {
         IKeyboard keyboard;
+        IMouse mouse;
 
         public MainWindow()
         {
@@ -20,39 +21,48 @@ namespace _2pok
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.keyboard.Disconnect();
+            
         }
 
         private void OpenConnection_Click(object sender, RoutedEventArgs e)
         {
             OpenConnection.IsEnabled = false;
+            Connect.IsEnabled = false;
 
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
-            IInputReceiver inputNetworkClient = new InputReceiver(portNumber);
+
+            IInputReceiver inputReciever = new InputReceiver(portNumber);
+
             IInputSimulator inputSimulator = new InputSimulator();
 
-            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputNetworkClient, inputSimulator, this);
+            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputReciever, inputSimulator, this);
             this.keyboard = virtualKeyboard;
-
-            virtualKeyboard.Connect();
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
+            OpenConnection.IsEnabled = false;
             Connect.IsEnabled = false;
-
-            IInputSender inputNetworkClient = new InputSender();
-            KeyboardMonitor keyboardMonitor = new KeyboardMonitor(true);
-
-            INetworkKeyboard networkKeyboard = new NetworkKeyboard(inputNetworkClient, keyboardMonitor);
-            this.keyboard = networkKeyboard;
 
             string hostIpAndPortNumber = Client_Port_And_Ip_Textbox.Text;
             string[] splitConnectionDetails = hostIpAndPortNumber.Split(':');
             IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
             int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
-            networkKeyboard.Connect(ipAddress, portNumber);
+            IInputSender inputSender = new InputSender();
+            inputSender.Connect(ipAddress, portNumber);
+
+            KeyboardMonitor keyboardMonitor = new KeyboardMonitor(true);
+
+            IKeyboard networkKeyboard = new NetworkKeyboard(inputSender, keyboardMonitor);
+            this.keyboard = networkKeyboard;
+
+            MouseMonitor mouseMonitor = new MouseMonitor(true);
+
+            IMouse networkMouse = new NetworkMouse(inputSender, mouseMonitor);
+            this.mouse = networkMouse;
+
+            System.Windows.Forms.Application.Run();
         }
     }   
 }
