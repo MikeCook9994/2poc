@@ -11,18 +11,13 @@ namespace _2pok
         public static extern bool UnhookWindowsHookEx(int hhk);
 
         [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern int SetWindowsHookEx(HookType idHook, CallbackDelegate lpfn, int hInstance, int threadId);
-
-        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern int CallNextHookEx(int idHook, int nCode, int wParam, int lParam);
+        public static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int GetCurrentThreadId();
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int GetModuleHandle(string lpModuleName);
-
-        public delegate int CallbackDelegate(int Code, int W, int L);
 
         public enum HookType : int
         {

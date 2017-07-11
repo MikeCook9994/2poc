@@ -6,19 +6,24 @@ namespace _2pok
 {
     class MouseMonitor
     {
+        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern int SetWindowsHookEx(Utils.HookType idHook, MouseProc lpfn, int hInstance, int threadId);
+
+        public delegate int MouseProc(int nCode, IntPtr wParam, IntPtr lParam);
+
         [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
+        public struct Point
         {
-            public long x;
-            public long y;
+            public int x;
+            public int y;
         };
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MOUSEHOOKSTRUCT {
-            public POINT pt;
-            public uint hwnd;
+            public Point pt;
+            public IntPtr hwnd;
             public uint wHitTestCode;
-            public UIntPtr dwExtraInfo;
+            public IntPtr dwExtraInfo;
         };
 
         private enum MouseMessages
@@ -50,7 +55,7 @@ namespace _2pok
         public LocalMouseEventHandler mouseMovedCallback;
 
         private int hookID = 0;
-        private Utils.CallbackDelegate hookCallback = null;
+        private MouseProc hookCallback = null;
 
         bool global = false;
         bool isFinalized = false;
@@ -58,19 +63,18 @@ namespace _2pok
         public MouseMonitor(bool global)
         {
             this.global = global;
-            this.hookCallback = new Utils.CallbackDelegate(HookCallback);
+            this.hookCallback = new MouseProc(HookCallback);
 
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
             {
                 if (this.global)
                 {
-                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE_LL, this.hookCallback, Utils.GetModuleHandle(curModule.ModuleName), 0);
-                    Console.WriteLine(this.hookID);
+                    this.hookID = SetWindowsHookEx(Utils.HookType.WH_MOUSE_LL, this.hookCallback, Utils.GetModuleHandle(curModule.ModuleName), 0);
                 }
                 else
                 {
-                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE, this.hookCallback, 0, Utils.GetCurrentThreadId());
+                    this.hookID = SetWindowsHookEx(Utils.HookType.WH_MOUSE, this.hookCallback, Utils.GetModuleHandle(curModule.ModuleName), Utils.GetCurrentThreadId());
                 }
             }
         }
@@ -93,57 +97,68 @@ namespace _2pok
             }
         }
 
-        private int HookCallback(int nCode, int wParam, int lParam)
+        private int HookCallback(int nCode,  IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
+            if (MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.leftMouseButtonDownCallback(hookStruct);
+                MOUSEHOOKSTRUCT pointerData = Marshal.PtrToStructure<MOUSEHOOKSTRUCT>(lParam);
+                Console.WriteLine($"point: {pointerData.pt.x}, {pointerData.pt.y}");
+                //POINT point = new POINT { byteRepresentation = lParam };
+                //Console.WriteLine("X: " + point.x);
+                //Console.WriteLine("Y: " + point.y);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.leftMouseButtonDownCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
+            else if (MouseMessages.WM_LBUTTONUP == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.leftMouseButtonUpCallback(hookStruct);
+                //POINT point = new POINT { byteRepresentation = lParam };
+                //Console.WriteLine("X: " + point.x);
+                //Console.WriteLine("Y: " + point.y);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.leftMouseButtonUpCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
+            else if (MouseMessages.WM_RBUTTONDOWN == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.rightMouseButtonDownCallback(hookStruct);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.rightMouseButtonDownCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
+            else if (MouseMessages.WM_RBUTTONUP == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.rightMouseButtonUpCallback(hookStruct);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.rightMouseButtonUpCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_MBUTTONDOWN == (MouseMessages)wParam)
+            else if (MouseMessages.WM_MBUTTONDOWN == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.middleMouseButtonDownCallback(hookStruct);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.middleMouseButtonDownCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_MBUTTONUP == (MouseMessages)wParam)
+            else if (MouseMessages.WM_MBUTTONUP == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.middleMouseButtonUpCallback(hookStruct);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.middleMouseButtonUpCallback(hookStruct);
             }
-            else if (nCode >= 0 && MouseMessages.WM_MOUSEWHEEL == (MouseMessages)wParam)
+            else if (MouseMessages.WM_MOUSEWHEEL == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                if(wParam > 0)
-                {
-                    this.scrollWheelUpCallback(hookStruct);
-                }
-                else
-                {
-                    this.scrollWheelDownCallback(hookStruct);
-                }
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //if(wParam > 0)
+                //{
+                //    this.scrollWheelUpCallback(hookStruct);
+                //}
+                //else
+                //{
+                //    this.scrollWheelDownCallback(hookStruct);
+                //}
             }
-            else if (nCode >= 0 && MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
+            else if (MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
             {
-                MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
-                this.mouseMovedCallback(hookStruct);
+                //POINT point = new POINT { byteRepresentation = lParam };
+                //Console.WriteLine("X: " + point.x);
+                //Console.WriteLine("Y: " + point.y);
+                //MOUSEHOOKSTRUCT hookStruct = (MOUSEHOOKSTRUCT)Marshal.PtrToStructure((IntPtr)lParam, typeof(MOUSEHOOKSTRUCT));
+                //this.mouseMovedCallback(hookStruct);
             }
 
-            return Utils.CallNextHookEx(hookID, nCode, wParam, lParam);
+            return Utils.CallNextHookEx(this.hookID, nCode, wParam, lParam);
         }
     }
 }
