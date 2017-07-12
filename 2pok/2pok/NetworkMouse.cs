@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Timers;
 
 using _2pok.interfaces;
@@ -10,7 +11,7 @@ namespace _2pok
         IInputSender inputSender;
         MouseMonitor mouseMonitor;
         Timer movementTimer;
-        MouseInput mostRecentMouseInput;
+        Utils.MSLLHOOKSTRUCT mostRecentMouseInput;
 
         public NetworkMouse(IInputSender inputSender, MouseMonitor mouseMonitor)
         {
@@ -26,75 +27,64 @@ namespace _2pok
             this.mouseMonitor.middleMouseButtonDownCallback += PressMiddleMouseButton;
             this.mouseMonitor.middleMouseButtonUpCallback += ReleaseMiddleMouseButton;
 
-            this.mouseMonitor.scrollWheelDownCallback += ScrollMouseWheelDown;
-            this.mouseMonitor.scrollWheelUpCallback += ScrollMouseWheelUp;
+            this.mouseMonitor.scrollMouseWheel += ScrollMouseWheel;
 
-            this.mouseMonitor.mouseMovedCallback += MoveMouseTo;
+            this.mouseMonitor.mouseMovedCallback += MoveMouse;
 
             this.movementTimer = new Timer();
             this.movementTimer.Interval = 100;
             this.movementTimer.AutoReset = true;
             this.movementTimer.Elapsed += (async (object sender, ElapsedEventArgs e) =>
             {
-                await this.inputSender.SendMouseInputAsync(this.mostRecentMouseInput);
+                await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEMOVE, this.mostRecentMouseInput);
             });
             this.movementTimer.Enabled = true;
         }
 
-        public void MoveMouseTo(Utils.MSLLHOOKSTRUCT hookStruct)
+        public void MoveMouse(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            this.mostRecentMouseInput = new MouseInput(hookStruct.pt, hookStruct.mouseData);
-            PrintHookStructContents(hookStruct);
+            this.mostRecentMouseInput = hookStruct;
         }
 
-        public void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONDOWN, hookStruct);
         }
 
-        public void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONUP, hookStruct);
         }
 
-        public void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONDOWN, hookStruct);
         }
 
-        public void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONUP, hookStruct);
         }
 
-        public void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONDOWN, hookStruct);
         }
 
-        public void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONUP, hookStruct);
         }
 
-        public void ScrollMouseWheelDown(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ScrollMouseWheel(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEWHEEL, hookStruct);
         }
-
-        public void ScrollMouseWheelUp(Utils.MSLLHOOKSTRUCT hookStruct)
+        
+        private async Task SendMouseEventAsync(Utils.MouseMessages eventType, Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
-        }
-
-        private void PrintHookStructContents(Utils.MSLLHOOKSTRUCT hookStruct)
-        {
-            Console.WriteLine($"POINT: ({hookStruct.pt.x}, {hookStruct.pt.y})");
-            Console.WriteLine($"SCROLL DIRECTION: {hookStruct.mouseData}");
-            Console.WriteLine($"FLAGS: {hookStruct.flags}");
-            Console.WriteLine($"TIME: {hookStruct.time}");
-            Console.WriteLine($"DWEXTRAINFO: {hookStruct.dwExtraInfo}");
-            Console.WriteLine("");
+            MouseInput mouseInput = new MouseInput(eventType, hookStruct);
+            await this.inputSender.SendMouseInputAsync(mouseInput);
         }
     }
 }

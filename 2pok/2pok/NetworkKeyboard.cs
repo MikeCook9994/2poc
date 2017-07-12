@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using _2pok.interfaces;
 using WindowsInput.Native;
 
@@ -22,22 +23,26 @@ namespace _2pok
 
         public async void PressKey(VirtualKeyCode key)
         {
-            if(!this.pressedKeys.Contains(key))
+            if (!this.pressedKeys.Contains(key))
             {
                 this.pressedKeys.Add(key);
-                KeyboardInput keyboardInput = new KeyboardInput(key, true);
-                int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+                await SendKeyEventAsync(key, true);
             }
         }
 
         public async void ReleaseKey(VirtualKeyCode key)
         {
-            if(this.pressedKeys.Contains(key))
+            if (this.pressedKeys.Contains(key))
             {
                 this.pressedKeys.Remove(key);
-                KeyboardInput keyboardInput = new KeyboardInput(key, false);
-                int bytesSent = await this.inputSender.SendKeyboardInputAsync(keyboardInput);
+                await SendKeyEventAsync(key, false);
             }
+        }
+
+        private async Task SendKeyEventAsync(VirtualKeyCode key, bool isKeyPress)
+        {
+            KeyboardInput keyboardInput = new KeyboardInput(key, isKeyPress);
+            await this.inputSender.SendKeyboardInputAsync(keyboardInput);
         }
     }
 }

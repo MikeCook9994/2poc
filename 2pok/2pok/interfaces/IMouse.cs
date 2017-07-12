@@ -1,6 +1,6 @@
 ﻿namespace _2pok.interfaces
 {
-    interface IMouse
+    public interface IMouse
     {
         void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
@@ -14,10 +14,8 @@
 
         void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ScrollMouseWheelUp(Utils.MSLLHOOKSTRUCT hookStruct);
+        void ScrollMouseWheel(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ScrollMouseWheelDown(Utils.MSLLHOOKSTRUCT hookStruct);
-
-        void MoveMouseTo(Utils.MSLLHOOKSTRUCT hookStruct);
+        void MoveMouse(Utils.MSLLHOOKSTRUCT hookStruct);
     }
 }

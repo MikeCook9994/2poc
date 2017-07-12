@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace _2pok.interfaces
 {
-    interface IInputSender
+    public interface IInputSender
     {
         Task<int> SendKeyboardInputAsync(KeyboardInput keyboardInput);
 

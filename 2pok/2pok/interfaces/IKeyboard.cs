@@ -2,7 +2,7 @@
 
 namespace _2pok.interfaces
 {
-    interface IKeyboard
+    public interface IKeyboard
     {
         void PressKey(VirtualKeyCode key);
 

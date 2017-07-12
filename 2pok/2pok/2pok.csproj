@@ -80,6 +80,7 @@
     <Compile Include="interfaces\IMouse.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyboardMonitor.cs" />
+    <Compile Include="MouseInput.cs" />
     <Compile Include="MouseMonitor.cs" />
     <Compile Include="NetworkKeyboard.cs" />
     <Compile Include="NetworkMouse.cs" />

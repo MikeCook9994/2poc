@@ -48,19 +48,21 @@ namespace _2pok
             if (keyboardInput.isBeingPressed && !this.pressedKeys.Contains(keyboardInput.key))
             {
                 PressKey(keyboardInput.key);
-                this.mainWindow.Dispatcher.Invoke(() =>
-                {
-                    this.mainWindow.Host_Input_Textbox.Text += keyboardInput.key.ToString() + " was pressed." + '\n';
-                });
+                PostKeyboardEventMessageToGUI(keyboardInput);
             }
-            else if(!keyboardInput.isBeingPressed && this.pressedKeys.Contains(keyboardInput.key))
+            else if (!keyboardInput.isBeingPressed && this.pressedKeys.Contains(keyboardInput.key))
             {
                 ReleaseKey(keyboardInput.key);
-                this.mainWindow.Dispatcher.Invoke(() =>
-                {
-                    this.mainWindow.Host_Input_Textbox.Text += keyboardInput.key.ToString() + " was released." + '\n';
-                });
+                PostKeyboardEventMessageToGUI(keyboardInput);
             }
+        }
+
+        private void PostKeyboardEventMessageToGUI(KeyboardInput keyboardInput)
+        {
+            this.mainWindow.Dispatcher.Invoke(() =>
+            {
+                this.mainWindow.Host_Input_Textbox.Text += $"{keyboardInput.key.ToString()} was {((keyboardInput.isBeingPressed) ? ("pressed") : ("released"))}{Environment.NewLine}";
+            });
         }
     }
 }

@@ -31,12 +31,15 @@ namespace _2pok
 
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
 
-            IInputReceiver inputReciever = new InputReceiver(portNumber);
-
+            IInputReceiver inputReceiver = new InputReceiver(portNumber);
+       
             IInputSimulator inputSimulator = new InputSimulator();
 
-            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputReciever, inputSimulator, this);
+            VirtualKeyboard virtualKeyboard = new VirtualKeyboard(inputReceiver, inputSimulator, this);
             this.keyboard = virtualKeyboard;
+
+            VirtualMouse virtualMouse = new VirtualMouse(inputReceiver, inputSimulator, this);
+            this.mouse = virtualMouse;
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)

@@ -5,13 +5,13 @@ namespace _2pok
     [Serializable]
     public class MouseInput
     {
-        Utils.POINT point;
-        int mouseData;
+        public Utils.MouseMessages eventType { get; set; }
+        public Utils.MSLLHOOKSTRUCT mouseHookStruct { get; set; }
 
-        public MouseInput(Utils.POINT point, int mouseData)
+        public MouseInput(Utils.MouseMessages eventType, Utils.MSLLHOOKSTRUCT mouseHookStruct)
         {
-            this.point = point;
-            this.mouseData = mouseData;
+            this.eventType = eventType;
+            this.mouseHookStruct = mouseHookStruct;
         }
     }
 }

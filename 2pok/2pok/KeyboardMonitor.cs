@@ -9,24 +9,13 @@ namespace _2pok
         [DllImport("user32.dll")]
         static public extern short GetKeyState(System.Windows.Forms.Keys nVirtKey);
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct KBDLLHookStruct
-        {
-            public Int32 vkCode;
-            public Int32 scanCode;
-            public Int32 flags;
-            public Int32 time;
-            public Int32 dwExtraInfo;
-        }
-
-        public enum KeyEvents
+        private enum KeyEvents
         {
             KeyDown = 0x0100,
             KeyUp = 0x0101,
             SKeyDown = 0x0104,
             SKeyUp = 0x0105
         }
-
 
         public delegate void LocalKeyEventHandler(VirtualKeyCode key);
         public event LocalKeyEventHandler KeyDown;

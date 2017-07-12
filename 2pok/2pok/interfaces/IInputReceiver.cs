@@ -3,7 +3,7 @@ using System.Net;
 
 namespace _2pok.interfaces
 {
-    interface IInputReceiver
+    public interface IInputReceiver
     {
         void BeginReceivingInput(AsyncCallback inputHandlerCallback);
 
