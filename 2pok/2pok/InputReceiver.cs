@@ -32,9 +32,9 @@ namespace _2pok
             return (KeyboardInput)Utils.ByteArrayToObject(this.udpState.client.EndReceive(inputResult, ref endpoint));
         }
 
-        public byte[] EndReceivingMouseInput(IAsyncResult inputResult, IPEndPoint endpoint)
+        public MouseInput EndReceivingMouseInput(IAsyncResult inputResult, IPEndPoint endpoint)
         {
-            throw new NotImplementedException();
+            return (MouseInput)Utils.ByteArrayToObject(this.udpState.client.EndReceive(inputResult, ref endpoint));
         }
     }
 }

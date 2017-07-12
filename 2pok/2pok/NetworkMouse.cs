@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Timers;
+
 using _2pok.interfaces;
 
 namespace _2pok
@@ -7,6 +9,8 @@ namespace _2pok
     {
         IInputSender inputSender;
         MouseMonitor mouseMonitor;
+        Timer movementTimer;
+        MouseInput mostRecentMouseInput;
 
         public NetworkMouse(IInputSender inputSender, MouseMonitor mouseMonitor)
         {
@@ -26,59 +30,71 @@ namespace _2pok
             this.mouseMonitor.scrollWheelUpCallback += ScrollMouseWheelUp;
 
             this.mouseMonitor.mouseMovedCallback += MoveMouseTo;
+
+            this.movementTimer = new Timer();
+            this.movementTimer.Interval = 100;
+            this.movementTimer.AutoReset = true;
+            this.movementTimer.Elapsed += (async (object sender, ElapsedEventArgs e) =>
+            {
+                await this.inputSender.SendMouseInputAsync(this.mostRecentMouseInput);
+            });
+            this.movementTimer.Enabled = true;
         }
-        
-        public void MoveMouseTo(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+
+        public void MoveMouseTo(Utils.MSLLHOOKSTRUCT hookStruct)
+        {
+            this.mostRecentMouseInput = new MouseInput(hookStruct.pt, hookStruct.mouseData);
+            PrintHookStructContents(hookStruct);
+        }
+
+        public void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void PressLeftMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void PressMiddleMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void PressRightMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void ReleaseLeftMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void ReleaseMiddleMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void ReleaseRightMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void ScrollMouseWheelDown(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void ScrollMouseWheelDown(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        public void ScrollMouseWheelUp(Utils.MSLLHOOKSTRUCT hookStruct)
         {
             PrintHookStructContents(hookStruct);
         }
 
-        public void ScrollMouseWheelUp(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
+        private void PrintHookStructContents(Utils.MSLLHOOKSTRUCT hookStruct)
         {
-            PrintHookStructContents(hookStruct);
-        }
-
-        private void PrintHookStructContents(MouseMonitor.MOUSEHOOKSTRUCT hookStruct)
-        {
-            Console.WriteLine("Mouse location is (" + hookStruct.pt.x + ", " + hookStruct.pt.y + ")");
-            Console.WriteLine("Mouse HWND: " + hookStruct.hwnd);
-            Console.WriteLine("Mouse wHitTestCode: " + hookStruct.wHitTestCode);
-            Console.WriteLine("Mouse dwExtraInfo: " + hookStruct.dwExtraInfo);
+            Console.WriteLine($"POINT: ({hookStruct.pt.x}, {hookStruct.pt.y})");
+            Console.WriteLine($"SCROLL DIRECTION: {hookStruct.mouseData}");
+            Console.WriteLine($"FLAGS: {hookStruct.flags}");
+            Console.WriteLine($"TIME: {hookStruct.time}");
+            Console.WriteLine($"DWEXTRAINFO: {hookStruct.dwExtraInfo}");
+            Console.WriteLine("");
         }
     }
 }

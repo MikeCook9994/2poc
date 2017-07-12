@@ -7,7 +7,7 @@ namespace _2pok.interfaces
     {
         Task<int> SendKeyboardInputAsync(KeyboardInput keyboardInput);
 
-        Task<int> SendMouseInputAsync();
+        Task<int> SendMouseInputAsync(MouseInput mouseInput);
 
         void Connect(IPAddress hostIp, int portNumber);
 

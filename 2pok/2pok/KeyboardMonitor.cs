@@ -6,9 +6,6 @@ namespace _2pok
 {
     class KeyboardMonitor
     {
-        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern int SetWindowsHookEx(Utils.HookType idHook, KeyboardProc lpfn, int hInstance, int threadId);
-
         [DllImport("user32.dll")]
         static public extern short GetKeyState(System.Windows.Forms.Keys nVirtKey);
 
@@ -30,14 +27,13 @@ namespace _2pok
             SKeyUp = 0x0105
         }
 
-        public delegate int KeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         public delegate void LocalKeyEventHandler(VirtualKeyCode key);
         public event LocalKeyEventHandler KeyDown;
         public event LocalKeyEventHandler KeyUp;
 
         private int HookID = 0;
-        KeyboardProc TheHookCB = null;
+        Utils.InputProc TheHookCB = null;
 
         bool IsFinalized = false;
         bool Global = false;
@@ -45,15 +41,15 @@ namespace _2pok
         public KeyboardMonitor(bool Global)
         {
             this.Global = Global;
-            this.TheHookCB = new KeyboardProc(KeybHookProc);
+            this.TheHookCB = new Utils.InputProc(KeybHookProc);
 
             if (Global)
             {
-                HookID = SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, this.TheHookCB, 0, 0); 
+                HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, this.TheHookCB, 0, 0); 
             }
             else
             {
-                HookID = SetWindowsHookEx(Utils.HookType.WH_KEYBOARD, this.TheHookCB, 0, Utils.GetCurrentThreadId()); 
+                HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD, this.TheHookCB, 0, Utils.GetCurrentThreadId()); 
             }
         }
 

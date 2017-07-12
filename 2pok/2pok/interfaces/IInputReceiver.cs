@@ -9,7 +9,7 @@ namespace _2pok.interfaces
 
         KeyboardInput EndReceivingKeyboardInput(IAsyncResult inputResult, IPEndPoint endpoint);
 
-        byte[] EndReceivingMouseInput(IAsyncResult inputResult, IPEndPoint endpoint);
+        MouseInput EndReceivingMouseInput(IAsyncResult inputResult, IPEndPoint endpoint);
 
         void Close();
     }

@@ -31,9 +31,10 @@ namespace _2pok
             return await this.udpClient.SendAsync(datagram, datagram.Length);
         }
 
-        public async Task<int> SendMouseInputAsync()
+        public async Task<int> SendMouseInputAsync(MouseInput mouseInput)
         {
-            throw new NotImplementedException();
+            byte[] datagram = Utils.ObjectToByteArray(mouseInput);
+            return await this.udpClient.SendAsync(datagram, datagram.Length);
         }
     }
 }

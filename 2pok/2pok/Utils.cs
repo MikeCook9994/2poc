@@ -5,8 +5,11 @@ using System.Runtime.InteropServices;
 
 namespace _2pok
 {
-    class Utils
+    public class Utils
     {
+        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern int SetWindowsHookEx(Utils.HookType idHook, InputProc lpfn, int hInstance, int threadId);
+
         [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern bool UnhookWindowsHookEx(int hhk);
 
@@ -18,6 +21,8 @@ namespace _2pok
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int GetModuleHandle(string lpModuleName);
+
+        public delegate int InputProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         public enum HookType : int
         {
@@ -37,6 +42,23 @@ namespace _2pok
             WH_KEYBOARD_LL = 13,
             WH_MOUSE_LL = 14
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int x;
+            public int y;
+        };
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MSLLHOOKSTRUCT
+        {
+            public POINT pt;
+            public int mouseData;
+            public int flags;
+            public int time;
+            public int dwExtraInfo;
+        };
 
         public static byte[] ObjectToByteArray(Object obj)
         {

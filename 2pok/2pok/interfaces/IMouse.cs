@@ -2,22 +2,22 @@
 {
     interface IMouse
     {
-        void PressLeftMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ReleaseLeftMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void PressRightMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ReleaseRightMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void PressMiddleMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ReleaseMiddleMouseButton(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ScrollMouseWheelUp(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void ScrollMouseWheelUp(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void ScrollMouseWheelDown(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void ScrollMouseWheelDown(Utils.MSLLHOOKSTRUCT hookStruct);
 
-        void MoveMouseTo(MouseMonitor.MOUSEHOOKSTRUCT hookStruct);
+        void MoveMouseTo(Utils.MSLLHOOKSTRUCT hookStruct);
     }
 }

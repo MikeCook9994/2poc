@@ -44,13 +44,13 @@ namespace _2pok
             OpenConnection.IsEnabled = false;
             Connect.IsEnabled = false;
 
-            string hostIpAndPortNumber = Client_Port_And_Ip_Textbox.Text;
-            string[] splitConnectionDetails = hostIpAndPortNumber.Split(':');
-            IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
-            int portNumber = Int32.Parse(splitConnectionDetails[1]);
+            //string hostIpAndPortNumber = Client_Port_And_Ip_Textbox.Text;
+            //string[] splitConnectionDetails = hostIpAndPortNumber.Split(':');
+            //IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
+            //int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
             IInputSender inputSender = new InputSender();
-            inputSender.Connect(ipAddress, portNumber);
+            //inputSender.Connect(ipAddress, portNumber);
 
             KeyboardMonitor keyboardMonitor = new KeyboardMonitor(true);
 
