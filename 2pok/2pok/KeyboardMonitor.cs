@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using WindowsInput.Native;
 
 namespace _2pok
@@ -8,14 +9,6 @@ namespace _2pok
     {
         [DllImport("user32.dll")]
         static public extern short GetKeyState(System.Windows.Forms.Keys nVirtKey);
-
-        private enum KeyEvents
-        {
-            KeyDown = 0x0100,
-            KeyUp = 0x0101,
-            SKeyDown = 0x0104,
-            SKeyUp = 0x0105
-        }
 
         public delegate void LocalKeyEventHandler(VirtualKeyCode key);
         public event LocalKeyEventHandler KeyDown;
@@ -67,6 +60,7 @@ namespace _2pok
                 return Utils.CallNextHookEx(this.HookID, nCode, wParam, lParam);
             }
 
+
             if (!Global)
             {
                 if (nCode == 3)
@@ -86,15 +80,15 @@ namespace _2pok
             }
             else
             {
-                KeyEvents kEvent = (KeyEvents)wParam;
+                Utils.KeyEvents kEvent = (Utils.KeyEvents)wParam;
                 Int32 vkCode = Marshal.ReadInt32((IntPtr)lParam.ToInt32());
 
-                if (kEvent == KeyEvents.KeyDown || kEvent == KeyEvents.SKeyDown)
+                if (kEvent == Utils.KeyEvents.KeyDown || kEvent == Utils.KeyEvents.SKeyDown)
                 {
                     if (KeyDown != null) KeyDown((VirtualKeyCode)vkCode);
                 }
 
-                if (kEvent == KeyEvents.KeyUp || kEvent == KeyEvents.SKeyUp)
+                if (kEvent == Utils.KeyEvents.KeyUp || kEvent == Utils.KeyEvents.SKeyUp)
                 {
                     if (KeyUp != null) KeyUp((VirtualKeyCode)vkCode);
                 }

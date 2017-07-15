@@ -6,20 +6,22 @@ namespace _2pok
 {
     public class MouseMonitor
     {
-        public delegate void LocalMouseEventHandler(Utils.MSLLHOOKSTRUCT mouseInput);
+        public delegate void MouseMovementEventHandler(Utils.POINT point);
+        public delegate void MouseScrollEventHandler(int wheelDelta);
+        public delegate void MouseClickEventHandler();
 
-        public LocalMouseEventHandler leftMouseButtonUpCallback;
-        public LocalMouseEventHandler leftMouseButtonDownCallback;
+        public MouseClickEventHandler leftMouseButtonUpCallback;
+        public MouseClickEventHandler leftMouseButtonDownCallback;
 
-        public LocalMouseEventHandler rightMouseButtonUpCallback;
-        public LocalMouseEventHandler rightMouseButtonDownCallback;
+        public MouseClickEventHandler rightMouseButtonUpCallback;
+        public MouseClickEventHandler rightMouseButtonDownCallback;
 
-        public LocalMouseEventHandler middleMouseButtonUpCallback;
-        public LocalMouseEventHandler middleMouseButtonDownCallback;
+        public MouseClickEventHandler middleMouseButtonUpCallback;
+        public MouseClickEventHandler middleMouseButtonDownCallback;
 
-        public LocalMouseEventHandler scrollMouseWheel;
+        public MouseScrollEventHandler scrollMouseWheel;
 
-        public LocalMouseEventHandler mouseMovedCallback;
+        public MouseMovementEventHandler mouseMovedCallback;
 
         private int hookID = 0;
         private Utils.InputProc hookCallback = null;
@@ -70,43 +72,37 @@ namespace _2pok
             {
                 if (Utils.MouseMessages.WM_LBUTTONDOWN == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.leftMouseButtonDownCallback(hookStruct);
+                    this.leftMouseButtonDownCallback();
                 }
                 else if (Utils.MouseMessages.WM_LBUTTONUP == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.leftMouseButtonUpCallback(hookStruct);
+                    this.leftMouseButtonUpCallback();
                 }
                 else if (Utils.MouseMessages.WM_RBUTTONDOWN == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.rightMouseButtonDownCallback(hookStruct);
+                    this.rightMouseButtonDownCallback();
                 }
                 else if (Utils.MouseMessages.WM_RBUTTONUP == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.rightMouseButtonUpCallback(hookStruct);
+                    this.rightMouseButtonUpCallback();
                 }
                 else if (Utils.MouseMessages.WM_MBUTTONDOWN == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.middleMouseButtonDownCallback(hookStruct);
+                    this.middleMouseButtonDownCallback();
                 }
                 else if (Utils.MouseMessages.WM_MBUTTONUP == (Utils.MouseMessages)wParam)
                 {
-                    Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.middleMouseButtonUpCallback(hookStruct);
+                    this.middleMouseButtonUpCallback();
                 }
                 else if (Utils.MouseMessages.WM_MOUSEWHEEL == (Utils.MouseMessages)wParam)
                 {
                     Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.scrollMouseWheel(hookStruct);
+                    this.scrollMouseWheel(hookStruct.mouseData);
                 }
                 else if (Utils.MouseMessages.WM_MOUSEMOVE == (Utils.MouseMessages)wParam)
                 {
                     Utils.MSLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<Utils.MSLLHOOKSTRUCT>(lParam);
-                    this.mouseMovedCallback(hookStruct);
+                    this.mouseMovedCallback(hookStruct.pt);
                 }
             }
             return Utils.CallNextHookEx(this.hookID, nCode, wParam, lParam);

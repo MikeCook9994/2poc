@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace _2pok
 {
@@ -43,7 +43,7 @@ namespace _2pok
             WH_MOUSE_LL = 14
         }
 
-        public enum MouseMessages
+        public enum MouseMessages : int
         {
             WM_LBUTTONDOWN = 0x0201,
             WM_LBUTTONUP = 0x0202,
@@ -55,9 +55,23 @@ namespace _2pok
             WM_MBUTTONUP = 0x0208
         }
 
+        public enum KeyEvents : int
+        {
+            KeyDown = 0x0100,
+            KeyUp = 0x0101,
+            SKeyDown = 0x0104,
+            SKeyUp = 0x0105
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
+            public POINT(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
             public int x;
             public int y;
         };

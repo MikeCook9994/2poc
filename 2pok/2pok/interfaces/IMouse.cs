@@ -1,21 +1,55 @@
 ﻿namespace _2pok.interfaces
 {
+    /// <summary>
+    /// Provides an interface for sending standard mouse input including left, middle, and right button clicks as well 
+    /// as scrolling the mouse wheel and moving the mouse.
+    /// </summary>
     public interface IMouse
     {
-        void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a left mouse button press event.
+        /// </summary>
+        void PressLeftMouseButton();
 
-        void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a left mouse button release event.
+        /// </summary>
+        void ReleaseLeftMouseButton();
 
-        void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a left mouse button press event.
+        /// </summary>
+        void PressRightMouseButton();
 
-        void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a right mouse button release event.
+        /// </summary>
+        void ReleaseRightMouseButton();
 
-        void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a left mouse button press event.
+        /// </summary>
+        void PressMiddleMouseButton();
 
-        void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a middle mouse button release event.
+        /// </summary>
+        void ReleaseMiddleMouseButton();
 
-        void ScrollMouseWheel(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Sends a mouse wheel scroll event.
+        /// </summary>
+        /// <param name="wheelDelta">Represents the amount to scroll in clicks as a multiple of 120. Positive values 
+        /// represent that the mouse wheel has been scrolled up, away from the user. Negative wheels represent that the
+        /// wheel has been scrolled down, toward the user.</param>
+        void ScrollMouseWheel(int wheelDelta);
 
-        void MoveMouse(Utils.MSLLHOOKSTRUCT hookStruct);
+        /// <summary>
+        /// Senda a mouse movement event.
+        /// </summary>
+        /// <param name="pt">The new position of the mouse. Represented as an (x,y) coordinate. (0,0) is the top left 
+        /// of the primary display (?). Above and to the left of this point will be represented with negative values.
+        /// </param>
+        void MoveMouse(Utils.POINT pt);
     }
 }

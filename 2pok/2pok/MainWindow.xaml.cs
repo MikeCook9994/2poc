@@ -1,8 +1,9 @@
-﻿using System.Windows;
-using System.Net;
-using System;
-using _2pok.interfaces;
+﻿using System;
+using System.Windows;
+
 using WindowsInput;
+
+using _2pok.interfaces;
 
 namespace _2pok
 {
@@ -31,7 +32,7 @@ namespace _2pok
 
             int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
 
-            IInputReceiver inputReceiver = new InputReceiver(portNumber);
+            IInputHost inputReceiver = new InputHost(portNumber);
        
             IInputSimulator inputSimulator = new InputSimulator();
 
@@ -52,7 +53,7 @@ namespace _2pok
             //IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
             //int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
-            IInputSender inputSender = new InputSender();
+            IInputClient inputSender = new InputClient();
             //inputSender.Connect(ipAddress, portNumber);
 
             KeyboardMonitor keyboardMonitor = new KeyboardMonitor(true);

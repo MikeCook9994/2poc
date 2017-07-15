@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using _2pok.interfaces;
+
 using WindowsInput.Native;
+
+using _2pok.interfaces;
 
 namespace _2pok
 {
     class NetworkKeyboard : IKeyboard
     {
         HashSet<VirtualKeyCode> pressedKeys;
-        IInputSender inputSender;
+        IInputClient inputSender;
         KeyboardMonitor keyboardMonitor;
 
-        public NetworkKeyboard(IInputSender inputSender, KeyboardMonitor keyboardMonitor)
+        public NetworkKeyboard(IInputClient inputSender, KeyboardMonitor keyboardMonitor)
         {
             pressedKeys = new HashSet<VirtualKeyCode>();
             this.inputSender = inputSender;
@@ -26,7 +28,7 @@ namespace _2pok
             if (!this.pressedKeys.Contains(key))
             {
                 this.pressedKeys.Add(key);
-                await SendKeyEventAsync(key, true);
+                await this.inputSender.SendInputAsync(new Input(key, Utils.KeyEvents.KeyDown));
             }
         }
 
@@ -35,14 +37,8 @@ namespace _2pok
             if (this.pressedKeys.Contains(key))
             {
                 this.pressedKeys.Remove(key);
-                await SendKeyEventAsync(key, false);
+                await this.inputSender.SendInputAsync(new Input(key, Utils.KeyEvents.KeyUp));
             }
-        }
-
-        private async Task SendKeyEventAsync(VirtualKeyCode key, bool isKeyPress)
-        {
-            KeyboardInput keyboardInput = new KeyboardInput(key, isKeyPress);
-            await this.inputSender.SendKeyboardInputAsync(keyboardInput);
         }
     }
 }

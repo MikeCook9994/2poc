@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Timers;
 
 using _2pok.interfaces;
@@ -8,12 +7,13 @@ namespace _2pok
 {
     class NetworkMouse : IMouse
     {
-        IInputSender inputSender;
+        IInputClient inputSender;
         MouseMonitor mouseMonitor;
         Timer movementTimer;
-        Utils.MSLLHOOKSTRUCT mostRecentMouseInput;
 
-        public NetworkMouse(IInputSender inputSender, MouseMonitor mouseMonitor)
+        Utils.POINT mostRecentMousePosition;
+
+        public NetworkMouse(IInputClient inputSender, MouseMonitor mouseMonitor)
         {
             this.inputSender = inputSender;
             this.mouseMonitor = mouseMonitor;
@@ -36,55 +36,64 @@ namespace _2pok
             this.movementTimer.AutoReset = true;
             this.movementTimer.Elapsed += (async (object sender, ElapsedEventArgs e) =>
             {
-                await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEMOVE, this.mostRecentMouseInput);
+                await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEMOVE, this.mostRecentMousePosition);
             });
             this.movementTimer.Enabled = true;
         }
 
-        public void MoveMouse(Utils.MSLLHOOKSTRUCT hookStruct)
+        public void MoveMouse(Utils.POINT point)
         {
-            this.mostRecentMouseInput = hookStruct;
+            this.mostRecentMousePosition = point;
         }
 
-        public async void PressLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressLeftMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONDOWN, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONDOWN);
         }
 
-        public async void PressMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressMiddleMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONUP, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_LBUTTONUP);
         }
 
-        public async void PressRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void PressRightMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONDOWN, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONDOWN);
         }
 
-        public async void ReleaseLeftMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseLeftMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONUP, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_RBUTTONUP);
         }
 
-        public async void ReleaseMiddleMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseMiddleMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONDOWN, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONDOWN);
         }
 
-        public async void ReleaseRightMouseButton(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ReleaseRightMouseButton()
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONUP, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MBUTTONUP);
         }
 
-        public async void ScrollMouseWheel(Utils.MSLLHOOKSTRUCT hookStruct)
+        public async void ScrollMouseWheel(int wheelDelta)
         {
-            await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEWHEEL, hookStruct);
+            await SendMouseEventAsync(Utils.MouseMessages.WM_MOUSEWHEEL, wheelDelta);
         }
         
-        private async Task SendMouseEventAsync(Utils.MouseMessages eventType, Utils.MSLLHOOKSTRUCT hookStruct)
+        private async Task SendMouseEventAsync(Utils.MouseMessages eventType)
         {
-            MouseInput mouseInput = new MouseInput(eventType, hookStruct);
-            await this.inputSender.SendMouseInputAsync(mouseInput);
+            await this.inputSender.SendInputAsync(new Input(eventType));
+        }
+
+        private async Task SendMouseEventAsync(Utils.MouseMessages eventType, Utils.POINT point)
+        { 
+            await this.inputSender.SendInputAsync(new Input(eventType, point));
+        }
+
+        private async Task SendMouseEventAsync(Utils.MouseMessages eventType, int wheelDelta)
+        {
+            await this.inputSender.SendInputAsync(new Input(eventType, wheelDelta));
         }
     }
 }

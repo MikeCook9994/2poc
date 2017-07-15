@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using _2pok.interfaces;
+
 using WindowsInput;
 using WindowsInput.Native;
+
+using _2pok.interfaces;
 
 namespace _2pok
 {
     class VirtualKeyboard : IKeyboard
     {
         HashSet<VirtualKeyCode> pressedKeys;
-        IInputReceiver inputReceiver;
+        IInputHost inputReceiver;
         IInputSimulator inputSimulator;
         AsyncCallback inputHandlerCallback;
         MainWindow mainWindow;
 
-        public VirtualKeyboard(IInputReceiver inputReceiver, IInputSimulator inputSimulator, MainWindow mainWindow)
+        public VirtualKeyboard(IInputHost inputReceiver, IInputSimulator inputSimulator, MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
             this.pressedKeys = new HashSet<VirtualKeyCode>();
@@ -41,27 +43,27 @@ namespace _2pok
         private void handleInput(IAsyncResult inputResult)
         {
             IPEndPoint endpoint = ((UdpState)(inputResult.AsyncState)).endpoint;
-            KeyboardInput keyboardInput = this.inputReceiver.EndReceivingKeyboardInput(inputResult, endpoint);
+            Input keyboardInput = this.inputReceiver.EndReceivingInput(inputResult, endpoint);
 
             this.inputReceiver.BeginReceivingInput(this.inputHandlerCallback);
 
-            if (keyboardInput.isBeingPressed && !this.pressedKeys.Contains(keyboardInput.key))
+            if ((keyboardInput.keyEvent == Utils.KeyEvents.KeyUp) && !this.pressedKeys.Contains(keyboardInput.key))
             {
                 PressKey(keyboardInput.key);
                 PostKeyboardEventMessageToGUI(keyboardInput);
             }
-            else if (!keyboardInput.isBeingPressed && this.pressedKeys.Contains(keyboardInput.key))
+            else if ((keyboardInput.keyEvent == Utils.KeyEvents.KeyDown) && this.pressedKeys.Contains(keyboardInput.key))
             {
                 ReleaseKey(keyboardInput.key);
                 PostKeyboardEventMessageToGUI(keyboardInput);
             }
         }
 
-        private void PostKeyboardEventMessageToGUI(KeyboardInput keyboardInput)
+        private void PostKeyboardEventMessageToGUI(Input keyboardInput)
         {
             this.mainWindow.Dispatcher.Invoke(() =>
             {
-                this.mainWindow.Host_Input_Textbox.Text += $"{keyboardInput.key.ToString()} was {((keyboardInput.isBeingPressed) ? ("pressed") : ("released"))}{Environment.NewLine}";
+                this.mainWindow.Host_Input_Textbox.Text += $"{keyboardInput.key.ToString()} was {((keyboardInput.keyEvent == Utils.KeyEvents.KeyDown) ? ("pressed") : ("released"))}{Environment.NewLine}";
             });
         }
     }
