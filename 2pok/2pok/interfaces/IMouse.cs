@@ -47,7 +47,7 @@
         /// <summary>
         /// Senda a mouse movement event.
         /// </summary>
-        /// <param name="pt">The new position of the mouse. Represented as an (x,y) coordinate. (0,0) is the top left 
+        /// <param name="pt">The new position of the mouse. Represented as an xy-coordinate. (0,0) is the top left 
         /// of the primary display (?). Above and to the left of this point will be represented with negative values.
         /// </param>
         void MoveMouse(Utils.POINT pt);

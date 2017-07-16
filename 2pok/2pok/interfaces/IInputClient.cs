@@ -11,15 +11,15 @@ namespace _2pok.interfaces
         /// <summary>
         /// Sends the input data to the host over the network.
         /// </summary>
-        /// <param name="input">the input data</param>
-        /// <returns>the number of bytes sent</returns>
+        /// <param name="input">The input data.</param>
+        /// <returns>The number of bytes sent.</returns>
         Task<int> SendInputAsync(Input input);
 
         /// <summary>
         /// Establishes the connection between the client and the host for sending and receiving input data.
         /// </summary>
-        /// <param name="hostIp">the IP address of the host</param>
-        /// <param name="portNumber">the port number to establish the connection on</param>
+        /// <param name="hostIp">The IP address of the host.</param>
+        /// <param name="portNumber">The port number to establish the connection on.</param>
         void Connect(IPAddress hostIp, int portNumber);
 
         /// <summary>

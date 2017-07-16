@@ -10,13 +10,13 @@ namespace _2pok.interfaces
         /// <summary>
         /// Sends a key press event.
         /// </summary>
-        /// <param name="key">the key code of the key that was pressed</param>
+        /// <param name="key">The key code of the key that was pressed.</param>
         void PressKey(VirtualKeyCode key);
 
         /// <summary>
         /// Sends a key release event.
         /// </summary>
-        /// <param name="key">the key code of the key that was pressed</param>
+        /// <param name="key">The key code of the key that was pressed.</param>
         void ReleaseKey(VirtualKeyCode key);
     }
 }
