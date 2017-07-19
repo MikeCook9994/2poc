@@ -99,23 +99,30 @@ namespace _2pok
         bool IsFinalized = false;
 
         /// <summary>
+        /// The instantiated delegate of the callback for our hooks. We need this to keep the delegate from getting
+        /// garbage collected.
+        /// </summary>
+        private Utils.InputProc HookCallback = null;
+
+        /// <summary>
         /// Sets our mouse hooks when constructed.
         /// </summary>
         /// <param name="global">Denotes if the hooks should be set globally or only for the local application.</param>
         public MouseMonitor(bool global)
         {
             this.Global = global;
+            this.HookCallback = new Utils.InputProc(MouseHookCallback);
 
             using (Process currProcess = Process.GetCurrentProcess())
             using (ProcessModule currModule = currProcess.MainModule)
             {
                 if (this.Global)
                 {
-                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE_LL, new Utils.InputProc(HookCallback), Utils.GetModuleHandle(currModule.ModuleName), 0);
+                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE_LL, this.HookCallback, Utils.GetModuleHandle(currModule.ModuleName), 0);
                 }
                 else
                 {
-                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE, new Utils.InputProc(HookCallback), Utils.GetModuleHandle(currModule.ModuleName), Utils.GetCurrentThreadId());
+                    this.hookID = Utils.SetWindowsHookEx(Utils.HookType.WH_MOUSE, this.HookCallback, Utils.GetModuleHandle(currModule.ModuleName), Utils.GetCurrentThreadId());
                 }
             }
         }
@@ -154,7 +161,7 @@ namespace _2pok
         /// <see cref="Utils.MSLLHOOKSTRUCT"/> such as the position of the mouse cursor or the amount the
         /// mouse wheel was scrolled.</param>
         /// <returns>Unused.</returns>
-        private int HookCallback(int nCode,  IntPtr wParam, IntPtr lParam)
+        private int MouseHookCallback(int nCode,  IntPtr wParam, IntPtr lParam)
         {
             // For all of these events, scrolling and mouse movement are the only ones that we need additional
             // information for. All other cases, just knowing the event occured is sufficient to handle it.

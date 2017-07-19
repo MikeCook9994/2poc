@@ -58,23 +58,30 @@ namespace _2pok
         private bool IsFinalized = false;
 
         /// <summary>
+        /// The instantiated delegate of the callback for our hooks. We need this to keep the delegate from getting
+        /// garbage collected.
+        /// </summary>
+        private Utils.InputProc HookCallback = null;
+
+        /// <summary>
         /// Sets our keyboard hooks when constructed.
         /// </summary>
         /// <param name="global">Denotes if the hooks should be set globally or only for the local application.</param>
         public KeyboardMonitor(bool global)
         {
             this.Global = global;
+            this.HookCallback = new Utils.InputProc(KeybHookProc);
 
             using (Process currProcess = Process.GetCurrentProcess())
             using (ProcessModule currModule = currProcess.MainModule)
             {
                 if (global)
                 {
-                    this.HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, new Utils.InputProc(KeybHookProc), Utils.GetModuleHandle(currModule.ModuleName), 0);
+                    this.HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD_LL, this.HookCallback, Utils.GetModuleHandle(currModule.ModuleName), 0);
                 }
                 else
                 {
-                    this.HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD, new Utils.InputProc(KeybHookProc), Utils.GetModuleHandle(currModule.ModuleName), Utils.GetCurrentThreadId());
+                    this.HookID = Utils.SetWindowsHookEx(Utils.HookType.WH_KEYBOARD, this.HookCallback, Utils.GetModuleHandle(currModule.ModuleName), Utils.GetCurrentThreadId());
                 }
             }
         }
