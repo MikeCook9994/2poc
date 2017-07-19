@@ -21,7 +21,7 @@ namespace _2pok
         /// <param name="threadId">If zero is provided, the hooks are global, otherwise they listen for events within 
         /// the window for the specified process ID.</param>
         /// <returns>An integer ID associated with the registerd hooks. Used to unset the hooks later.</returns>
-        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int SetWindowsHookEx(Utils.HookType idHook, InputProc lpfn, int hInstance, int threadId);
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace _2pok
         /// </summary>
         /// <param name="hhk">The hook ID identifying the hooks to be unset.</param>
         /// <returns>True if the hooks were successfully unset, false otherwise.</returns>
-        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern bool UnhookWindowsHookEx(int hhk);
 
         /// <summary>
@@ -43,8 +43,16 @@ namespace _2pok
         /// <param name="lParam">The lParam provided as a parameter to the lpfn callback of the form 
         /// <see cref="Utils.InputProc"/>.</param>
         /// <returns>Unsued.</returns>
-        [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
+
+        /// <summary>
+        /// Retreives the current position of the mouse cursor.
+        /// </summary>
+        /// <param name="lpPoint">A <see cref="Utils.POINT"/> struct to fill with the current location.</param>
+        /// <returns>True if the operation was successful. False otherwise.</returns>
+        [DllImport("User32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern bool GetcursorPos(out Utils.POINT lpPoint);
 
         /// <summary>
         /// Gets the current thread ID.

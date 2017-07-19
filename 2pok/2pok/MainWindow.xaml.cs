@@ -15,9 +15,9 @@ namespace _2pok
     public partial class MainWindow : Window
     {
         /// <summary>
-        /// True if this application is functioning as the host; false if otherwise.
+        /// -1 if the client has not been configured as host or client. 0 if client, 1 if host.
         /// </summary>
-        bool isHost = false;
+        int isHost = -1;
 
         /// <summary>
         /// Used to set hooks for monitoring keyboard inputs on the client's machine.
@@ -54,13 +54,13 @@ namespace _2pok
         /// <param name="e">Unused.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(this.isHost == false)
+            if(this.isHost == 0)
             {
                 this.keyboardMonitor.Dispose();
                 this.mouseMonitor.Dispose();
                 this.inputClient.Close();
             }
-            else
+            else if(this.isHost == 1)
             {
                 this.inputHost.Close();
             }
@@ -74,7 +74,7 @@ namespace _2pok
         /// <param name="e">Unused.</param>
         private void OpenConnection_Click(object sender, RoutedEventArgs e)
         {
-            this.isHost = true;
+            this.isHost = 1;
 
             //Disables the connection buttons so a second connection cannot attempt to be established.
             OpenConnection.IsEnabled = false;
@@ -100,7 +100,7 @@ namespace _2pok
         /// <param name="e">Unused.</param>
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
-            this.isHost = false;
+            this.isHost = 0;
 
             //Disables the connection buttons so a second connection cannot attempt to be established.
             OpenConnection.IsEnabled = false;

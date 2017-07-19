@@ -44,6 +44,9 @@ namespace _2pok
             this.inputSender = inputSender;
             this.mouseMonitor = mouseMonitor;
 
+            //We need to make sure this has a value in case the user does not move the mouse before our timer triggrs.
+            this.mostRecentMousePosition = MouseMonitor.GetCursorPosition();
+
             // Sets up the callbacks from the mouse monitor.
             this.mouseMonitor.leftMouseButtonDownCallback += PressLeftMouseButton;
             this.mouseMonitor.leftMouseButtonUpCallback += ReleaseLeftMouseButton;

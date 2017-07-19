@@ -197,5 +197,16 @@ namespace _2pok
             }
             return Utils.CallNextHookEx(this.hookID, nCode, wParam, lParam);
         }
+
+        /// <summary>
+        /// Retrieves the current position of the cursor.
+        /// </summary>
+        /// <returns>The current value of the cursor represented as an xy-coordinate.</returns>
+        public static Utils.POINT GetCursorPosition()
+        {
+            Utils.POINT lpPoint;
+            Utils.GetcursorPos(out lpPoint);
+            return lpPoint;
+        }
     }
 }
