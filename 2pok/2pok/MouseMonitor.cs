@@ -205,7 +205,7 @@ namespace _2pok
         public static Utils.POINT GetCursorPosition()
         {
             Utils.POINT lpPoint;
-            Utils.GetcursorPos(out lpPoint);
+            Utils.GetCursorPos(out lpPoint);
             return lpPoint;
         }
     }

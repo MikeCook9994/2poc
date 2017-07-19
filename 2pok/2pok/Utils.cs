@@ -52,7 +52,7 @@ namespace _2pok
         /// <param name="lpPoint">A <see cref="Utils.POINT"/> struct to fill with the current location.</param>
         /// <returns>True if the operation was successful. False otherwise.</returns>
         [DllImport("User32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern bool GetcursorPos(out Utils.POINT lpPoint);
+        public static extern bool GetCursorPos(out Utils.POINT lpPoint);
 
         /// <summary>
         /// Gets the current thread ID.
@@ -134,6 +134,7 @@ namespace _2pok
         /// <summary>
         /// Represents an point on the screen as an xy-coordinate
         /// </summary>
+        [Serializable]
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
