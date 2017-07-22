@@ -96,6 +96,7 @@ namespace _2pok
 
             this.inputReceiver.BeginReceivingInput(this.inputHandlerCallback);
 
+            Console.WriteLine($"{keyboardInput.key} {keyboardInput.keyEvent}{Environment.NewLine}");
             if ((keyboardInput.keyEvent == Utils.KeyEvents.KeyUp) && !this.pressedKeys.Contains(keyboardInput.key))
             {
                 PressKey(keyboardInput.key);

@@ -1,0 +1,9 @@
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\2pok_tests.dll
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\2pok_tests.pdb
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\Castle.Core.dll
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\Moq.dll
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\bin\Debug\Moq.xml
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\obj\Debug\2pok_tests.csprojResolveAssemblyReference.cache
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\obj\Debug\2pok_tests.dll
+D:\cook\Documents\projects\2pok\2pok\2pok_tests\obj\Debug\2pok_tests.pdb

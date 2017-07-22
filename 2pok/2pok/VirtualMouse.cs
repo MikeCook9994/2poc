@@ -134,6 +134,7 @@ namespace _2pok
 
             this.inputReceiver.BeginReceivingInput(this.inputHandlerCallback);
 
+            Console.WriteLine($"x: {mouseInput.point.x} y: {mouseInput.point.y}; {mouseInput.mouseEvent}");
             switch(mouseInput.mouseEvent)
             {
                 case Utils.MouseMessages.WM_LBUTTONDOWN:

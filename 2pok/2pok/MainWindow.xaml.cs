@@ -30,14 +30,24 @@ namespace _2pok
         MouseMonitor mouseMonitor;
 
         /// <summary>
-        /// Provides an interface for receiving <see cref="Input"/> input events over the network.
+        /// Provides an interface for receiving <see cref="Input"/> keyboard input events over the network.
         /// </summary>
-        IInputHost inputHost;
+        IInputHost keyboardInputHost;
 
         /// <summary>
-        /// Provides an interface for sending <see cref="Input"/> input events over the network.
+        /// Provides an interface for receiving <see cref="Input"/> mouse input events over the network.
         /// </summary>
-        IInputClient inputClient;
+        IInputHost mouseInputHost;
+
+        /// <summary>
+        /// Provides an interface for sending <see cref="Input"/> keyboard input events over the network.
+        /// </summary>
+        IInputClient keyboardInputClient;
+
+        /// <summary>
+        /// Provides an interface for sending <see cref="Input"/> mouse input events over the network.
+        /// </summary>
+        IInputClient mouseInputClient;
 
         /// <summary>
         /// Initializes the Main Window and it's components.
@@ -57,12 +67,15 @@ namespace _2pok
             if(this.isHost == 0)
             {
                 this.keyboardMonitor.Dispose();
+                this.keyboardInputClient.Close();
+
                 this.mouseMonitor.Dispose();
-                this.inputClient.Close();
+                this.mouseInputClient.Close();
             }
             else if(this.isHost == 1)
             {
-                this.inputHost.Close();
+                this.mouseInputHost.Close();
+                this.keyboardInputHost.Close();
             }
         }
 
@@ -82,14 +95,18 @@ namespace _2pok
 
             // grabs the port number to accept connections on. Port Forwarding must be set up on your local gateway
             // to forward data over the port to the machine hosting the application.
-            int portNumber = Int32.Parse(Host_Port_Number_Textbox.Text);
+            string portRange = Host_Port_Number_Textbox.Text;
+            string[] portExtremes = portRange.Split(';');
+            int mousePortNumber = Int32.Parse(portExtremes[0]);
+            int keyboardPortNumber = Int32.Parse(portExtremes[1]);
 
-            this.inputHost = new InputHost(portNumber);
-       
+            this.mouseInputHost = new InputHost(mousePortNumber);
+            this.keyboardInputHost = new InputHost(keyboardPortNumber);
+
             IInputSimulator inputSimulator = new InputSimulator();
 
-            IKeyboard virtualKeyboard = new VirtualKeyboard(this.inputHost, inputSimulator, this);
-            IMouse virtualMouse = new VirtualMouse(this.inputHost, inputSimulator, this);
+            IMouse virtualMouse = new VirtualMouse(this.mouseInputHost, inputSimulator, this);
+            IKeyboard virtualKeyboard = new VirtualKeyboard(this.keyboardInputHost, inputSimulator, this);
         }
 
         /// <summary>
@@ -109,17 +126,24 @@ namespace _2pok
             //Parses the input string for the IP address and the port number.
             string hostIpAndPortNumber = Client_Port_And_Ip_Textbox.Text;
             string[] splitConnectionDetails = hostIpAndPortNumber.Split(':');
-            IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
-            int portNumber = Int32.Parse(splitConnectionDetails[1]);
 
-            this.inputClient = new InputClient();
-            this.inputClient.Connect(ipAddress, portNumber);
+            IPAddress ipAddress = IPAddress.Parse(splitConnectionDetails[0]);
+
+            string[] portExtremes = splitConnectionDetails[1].Split(';');
+            int mousePortNumber = Int32.Parse(portExtremes[0]);
+            int keyboardPortNumber = Int32.Parse(portExtremes[1]);
+
+            this.mouseInputClient = new InputClient();
+            this.mouseInputClient.Connect(ipAddress, mousePortNumber);
+
+            this.keyboardInputClient = new InputClient();
+            this.keyboardInputClient.Connect(ipAddress, keyboardPortNumber);
 
             this.keyboardMonitor = new KeyboardMonitor(true);
-            IKeyboard networkKeyboard = new NetworkKeyboard(this.inputClient, this.keyboardMonitor);
+            IKeyboard networkKeyboard = new NetworkKeyboard(this.keyboardInputClient, this.keyboardMonitor);
 
             this.mouseMonitor = new MouseMonitor(true);
-            IMouse networkMouse = new NetworkMouse(this.inputClient, this.mouseMonitor);
+            IMouse networkMouse = new NetworkMouse(this.mouseInputClient, this.mouseMonitor);
 
             System.Windows.Forms.Application.Run();
         }
